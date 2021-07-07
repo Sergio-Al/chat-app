@@ -4,12 +4,31 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/main.css" />
     <title>Chat-App</title>
   </head>
   <body>
-    <h1>Hello from my chat app</h1>
+    <div class="container">
+      <h1>Hello from my chat app</h1>
 
-    <button id="increment">+1</button>
+      <button id="increment">+1</button>
+
+      <form action="" onsubmit="event.preventDefault(); sendMessage()">
+        <input
+          type="text"
+          name="message"
+          id="msgInput"
+          placeholder="Enter you message"
+        />
+        <button type="submit">Ingresar</button>
+      </form>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>
