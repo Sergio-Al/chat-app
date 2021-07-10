@@ -25,6 +25,6 @@ socket.on("receivedMsg", (msg) => {
   console.log("Message: ", msg);
 });
 
-socket.on("helloMessage", (message) => {
-  console.log("this is your message ", message);
+socket.on("message", (message) => {
+  console.log("Message: ", message);
 });

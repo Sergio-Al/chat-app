@@ -17,9 +17,6 @@ app.use(express.static(publicDirectoryPath));
 // server (emit) -> client (receive) - countUpdated
 // client (emit) -> server (receive) - increment
 
-
-
-
 // socket is an object containing info about socket connection
 io.on("connection", (socket) => {
   console.log("new web socket connection");
@@ -36,11 +33,19 @@ io.on("connection", (socket) => {
   //   io.emit("countUpdated", count);
   // });
 
-  socket.emit("helloMessage", "Welcome to the connection!");
-  socket.on("sendMessage", (msg) => {
-    io.emit("receivedMsg", msg)
-  })
+  socket.emit("message", "Welcome to the connection!");
 
+  // emit an event to everyone except for this connection
+  socket.broadcast.emit("message", "A new user has joined!");
+
+  socket.on("sendMessage", (msg) => {
+    io.emit("receivedMsg", msg);
+  });
+
+
+  socket.on('disconnect', () => {
+    io.emit("message", "An user has left!")
+  })
 });
 
 // This is for lister our http server
