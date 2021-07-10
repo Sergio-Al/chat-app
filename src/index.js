@@ -42,10 +42,13 @@ io.on("connection", (socket) => {
     io.emit("receivedMsg", msg);
   });
 
+  socket.on("location", (msg) => {
+    io.emit("receivedMsg", `https://google.com/maps?q=${msg.lat},${msg.long}`);
+  });
 
-  socket.on('disconnect', () => {
-    io.emit("message", "An user has left!")
-  })
+  socket.on("disconnect", () => {
+    io.emit("message", "An user has left!");
+  });
 });
 
 // This is for lister our http server
