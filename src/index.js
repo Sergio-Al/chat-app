@@ -2,6 +2,7 @@ const path = require("path");
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
+const Filter = require("bad-words");
 
 const app = express();
 // this is for create a new server explicitly, beacuse express create a one for us but we haven't access to it.
@@ -38,12 +39,21 @@ io.on("connection", (socket) => {
   // emit an event to everyone except for this connection
   socket.broadcast.emit("message", "A new user has joined!");
 
-  socket.on("sendMessage", (msg) => {
+  // Event listener 'sendMessage'
+  socket.on("sendMessage", (msg, callback) => {
+    const filter = new Filter();
+
+    if (filter.isProfane(msg)) {
+      return callback("profanity is not allowed!");
+    }
+
     io.emit("receivedMsg", msg);
+    callback("delivered!");
   });
 
-  socket.on("location", (msg) => {
+  socket.on("location", (msg, callback) => {
     io.emit("receivedMsg", `https://google.com/maps?q=${msg.lat},${msg.long}`);
+    callback("your location has been shared!");
   });
 
   socket.on("disconnect", () => {

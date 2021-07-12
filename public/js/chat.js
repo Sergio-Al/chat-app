@@ -18,7 +18,13 @@ function sendMessage() {
     console.log("nothing to emit!");
     return;
   }
-  socket.emit("sendMessage", message);
+  socket.emit("sendMessage", message, (error) => {
+    if (error) {
+      return console.log(error);
+    }
+
+    console.log("Message Delivered!");
+  });
 }
 
 socket.on("receivedMsg", (msg) => {
@@ -35,9 +41,15 @@ document.querySelector("#send-location").addEventListener("click", () => {
   }
 
   navigator.geolocation.getCurrentPosition((position) => {
-    socket.emit("location", {
-      lat: position.coords.latitude,
-      long: position.coords.longitude,
-    });
+    socket.emit(
+      "location",
+      {
+        lat: position.coords.latitude,
+        long: position.coords.longitude,
+      },
+      (message) => {
+        console.log("Result", message);
+      }
+    );
   });
 });
