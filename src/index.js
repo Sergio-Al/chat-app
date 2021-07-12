@@ -52,7 +52,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("location", (msg, callback) => {
-    io.emit("message", `https://google.com/maps?q=${msg.lat},${msg.long}`);
+    io.emit(
+      "locationMessage",
+      `https://google.com/maps?q=${msg.lat},${msg.long}`
+    );
     callback("your location has been shared!");
   });
 

@@ -23,6 +23,9 @@ const $locationButton = document.querySelector("#send-location");
 // Templates
 // inner catch all element inside #messages-template
 const messageTemplate = document.querySelector("#message-template").innerHTML;
+const userLocationTemplate = document.querySelector(
+  "#user-location-template"
+).innerHTML;
 
 $messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -50,6 +53,13 @@ $messageForm.addEventListener("submit", (e) => {
 
     console.log("Message Delivered!");
   });
+});
+
+socket.on("locationMessage", (url) => {
+  console.log(url);
+
+  const html = Mustache.render(userLocationTemplate, { url });
+  $messages.insertAdjacentHTML("beforeend", html);
 });
 
 socket.on("message", (message) => {
