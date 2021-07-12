@@ -49,3 +49,13 @@ h1 {
   border-width: 1px;
   font-weight: bold;
 }
+
+.container form button:disabled {
+  color: white;
+  background-color: rgba(0, 67, 192, 0.2);
+}
+
+#send-location:disabled {
+  color: rgba(110, 110, 110, 0.2);
+  background-color: rgba(77, 77, 77, 0.2);
+}
