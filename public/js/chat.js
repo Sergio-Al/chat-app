@@ -16,6 +16,13 @@ const socket = io();
 const $messageForm = document.querySelector("#message-form");
 const $messageFormInput = $messageForm.querySelector("input");
 const $messageFormButton = $messageForm.querySelector("button");
+const $messages = document.querySelector("#messages");
+// Elements for send location
+const $locationButton = document.querySelector("#send-location");
+
+// Templates
+// inner catch all element inside #messages-template
+const messageTemplate = document.querySelector("#message-template").innerHTML;
 
 $messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -45,16 +52,12 @@ $messageForm.addEventListener("submit", (e) => {
   });
 });
 
-socket.on("receivedMsg", (msg) => {
-  console.log("Message: ", msg);
-});
-
 socket.on("message", (message) => {
   console.log("Message: ", message);
-});
 
-// Elements for send location
-const $locationButton = document.querySelector("#send-location");
+  const html = Mustache.render(messageTemplate, { message });
+  $messages.insertAdjacentHTML("beforeend", html);
+});
 
 $locationButton.addEventListener("click", () => {
   if (!navigator.geolocation) {

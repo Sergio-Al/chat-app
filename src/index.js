@@ -47,12 +47,12 @@ io.on("connection", (socket) => {
       return callback("profanity is not allowed!");
     }
 
-    io.emit("receivedMsg", msg);
+    io.emit("message", msg);
     callback("delivered!");
   });
 
   socket.on("location", (msg, callback) => {
-    io.emit("receivedMsg", `https://google.com/maps?q=${msg.lat},${msg.long}`);
+    io.emit("message", `https://google.com/maps?q=${msg.lat},${msg.long}`);
     callback("your location has been shared!");
   });
 
