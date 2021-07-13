@@ -38,10 +38,21 @@ io.on("connection", (socket) => {
   //   io.emit("countUpdated", count);
   // });
 
-  socket.emit("message", generateMessage("Welcome!"));
+  // Event listener for create a new room
+  socket.on("join", ({ username, room }) => {
+    // Create a new room from the connection
+    // now the behavior of emit and broadcast will be the following inside of every rooms:
+    // io.to.emit - to emit messages to everybody in a particular room.
+    // socket.broadcast.to.emit -  to emit broadcast behavior on a particular room connected.
+    socket.join(room);
 
-  // emit an event to everyone except for this connection
-  socket.broadcast.emit("message", generateMessage("A new user has joined!"));
+    socket.emit("message", generateMessage("Welcome!"));
+
+    // emit an event to everyone except for this connection
+    socket.broadcast
+      .to(room)
+      .emit("message", generateMessage(`${username} has joined!`));
+  });
 
   // Event listener 'sendMessage'
   socket.on("sendMessage", (msg, callback) => {
@@ -51,7 +62,7 @@ io.on("connection", (socket) => {
       return callback("profanity is not allowed!");
     }
 
-    io.emit("message", generateMessage(msg));
+    io.to("Sergio's room").emit("message", generateMessage(msg));
     callback("delivered!");
   });
 

@@ -27,6 +27,12 @@ const userLocationTemplate = document.querySelector(
   "#user-location-template"
 ).innerHTML;
 
+// Options
+// ignoreQueryPrefix is for '?' at the beginning of our query as param in html send form
+const { username, room } = Qs.parse(location.search, {
+  ignoreQueryPrefix: true,
+});
+
 $messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -99,3 +105,5 @@ $locationButton.addEventListener("click", () => {
     );
   });
 });
+
+socket.emit("join", { username, room });
