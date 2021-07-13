@@ -88,6 +88,10 @@ h1 {
   transition: all 0.2s ease-in-out;
 }
 
+.location p {
+  margin: 0.5rem 0;
+}
+
 .location a:hover {
   color: rgb(75, 77, 78);
 }

@@ -39,6 +39,9 @@ $messageForm.addEventListener("submit", (e) => {
 
   if (message === "") {
     console.log("nothing to emit!");
+    setTimeout(() => {
+      $messageFormButton.removeAttribute("disabled");
+    }, 2000);
     return;
   }
   socket.emit("sendMessage", message, (error) => {
@@ -55,10 +58,13 @@ $messageForm.addEventListener("submit", (e) => {
   });
 });
 
-socket.on("locationMessage", (url) => {
-  console.log(url);
+socket.on("locationMessage", (message) => {
+  console.log(message.url);
 
-  const html = Mustache.render(userLocationTemplate, { url });
+  const html = Mustache.render(userLocationTemplate, {
+    url: message.url,
+    createdAt: moment(message.createdAt).format("h:mm a"),
+  });
   $messages.insertAdjacentHTML("beforeend", html);
 });
 
@@ -67,7 +73,7 @@ socket.on("message", (message) => {
 
   const html = Mustache.render(messageTemplate, {
     message: message.text,
-    createdAt: moment(message.createdAt).format('h:mm a'),
+    createdAt: moment(message.createdAt).format("h:mm a"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
 });

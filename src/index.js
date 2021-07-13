@@ -3,7 +3,10 @@ const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const Filter = require("bad-words");
-const { generateMessage } = require("./utils/messages");
+const {
+  generateMessage,
+  generateLocationMessage,
+} = require("./utils/messages");
 
 const app = express();
 // this is for create a new server explicitly, beacuse express create a one for us but we haven't access to it.
@@ -53,10 +56,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("location", (msg, callback) => {
-    io.emit(
-      "locationMessage",
-      `https://google.com/maps?q=${msg.lat},${msg.long}`
-    );
+    const url = `https://google.com/maps?q=${msg.lat},${msg.long}`;
+    io.emit("locationMessage", generateLocationMessage(url));
     callback("your location has been shared!");
   });
 
