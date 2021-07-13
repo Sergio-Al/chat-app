@@ -10,34 +10,49 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/main.css" />
+    <!-- <link rel="stylesheet" href="/css/main.css" /> -->
+    <link rel="icon" href="img/favicon.png" />
+    <link rel="stylesheet" href="css/styles.min.css" />
     <title>Chat-App</title>
   </head>
   <body>
-    <div class="container">
-      <h1>Hello from my chat app</h1>
+    <div class="chat">
+      <div class="chat__sidebar"></div>
 
-      <div id="messages"></div>
+      <div class="chat__main">
+        <div id="messages" class="chat__messages"></div>
 
-      <button id="increment">+1</button>
+        <!-- <button id="increment">+1</button> -->
 
-      <form action="" id="message-form">
-        <input type="text" name="message" placeholder="Enter you message" />
-        <button>Ingresar</button>
-      </form>
-      <button id="send-location">Send location</button>
+        <div class="compose">
+          <form action="" id="message-form">
+            <input type="text" name="message" placeholder="Enter you message" />
+            <button>Ingresar</button>
+          </form>
+          <button id="send-location">Send location</button>
+        </div>
+      </div>
     </div>
 
     <script id="message-template" type="text/html">
-      <div>
-        <p>{{ createdAt }} - {{ message }}</p>
+      <div class="message">
+        <p>
+          <span class="message__name">Some user name</span>
+          <span class="message__meta">{{ createdAt }}</span>
+        </p>
+        <p>{{ message }}</p>
       </div>
     </script>
 
     <script id="user-location-template" type="text/html">
       <div class="location">
-        <p>{{ createdAt }}</p>
-        <a href="{{ url }}" target="_blank">My Location</a>
+        <p>
+          <span class="message__name">Some user name</span>
+          <span class="message__meta">{{ createdAt }}</span>
+        </p>
+        <p>
+          <a href="{{ url }}" target="_blank">My Location</a>
+        </p>
       </div>
     </script>
 
