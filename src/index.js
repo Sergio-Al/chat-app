@@ -3,6 +3,7 @@ const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const Filter = require("bad-words");
+const { generateMessage } = require("./utils/messages");
 
 const app = express();
 // this is for create a new server explicitly, beacuse express create a one for us but we haven't access to it.
@@ -34,10 +35,10 @@ io.on("connection", (socket) => {
   //   io.emit("countUpdated", count);
   // });
 
-  socket.emit("message", "Welcome to the connection!");
+  socket.emit("message", generateMessage("Welcome!"));
 
   // emit an event to everyone except for this connection
-  socket.broadcast.emit("message", "A new user has joined!");
+  socket.broadcast.emit("message", generateMessage("A new user has joined!"));
 
   // Event listener 'sendMessage'
   socket.on("sendMessage", (msg, callback) => {
@@ -47,7 +48,7 @@ io.on("connection", (socket) => {
       return callback("profanity is not allowed!");
     }
 
-    io.emit("message", msg);
+    io.emit("message", generateMessage(msg));
     callback("delivered!");
   });
 
@@ -60,7 +61,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    io.emit("message", "An user has left!");
+    io.emit("message", generateMessage("An user has left!"));
   });
 });
 
