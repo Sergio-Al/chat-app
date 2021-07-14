@@ -7,6 +7,12 @@ const {
   generateMessage,
   generateLocationMessage,
 } = require("./utils/messages");
+const {
+  addUser,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+} = require("./utils/users");
 
 const app = express();
 // this is for create a new server explicitly, beacuse express create a one for us but we haven't access to it.
@@ -39,19 +45,27 @@ io.on("connection", (socket) => {
   // });
 
   // Event listener for create a new room
-  socket.on("join", ({ username, room }) => {
+  socket.on("join", (options, callback) => {
+    const { error, user } = addUser({ id: socket.id, ...options });
+
+    if (error) {
+      return callback(error);
+    }
+
     // Create a new room from the connection
     // now the behavior of emit and broadcast will be the following inside of every rooms:
     // io.to.emit - to emit messages to everybody in a particular room.
     // socket.broadcast.to.emit -  to emit broadcast behavior on a particular room connected.
-    socket.join(room);
+    socket.join(user.room);
 
     socket.emit("message", generateMessage("Welcome!"));
 
     // emit an event to everyone except for this connection
     socket.broadcast
-      .to(room)
-      .emit("message", generateMessage(`${username} has joined!`));
+      .to(user.room)
+      .emit("message", generateMessage(`${user.username} has joined!`));
+
+    callback();
   });
 
   // Event listener 'sendMessage'
@@ -62,7 +76,7 @@ io.on("connection", (socket) => {
       return callback("profanity is not allowed!");
     }
 
-    io.to("Sergio's room").emit("message", generateMessage(msg));
+    io.to("js").emit("message", generateMessage(msg));
     callback("delivered!");
   });
 
@@ -73,7 +87,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    io.emit("message", generateMessage("An user has left!"));
+    const user = removeUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit(
+        "message",
+        generateMessage(`${user.username} has left the room!`)
+      );
+    }
   });
 });
 
