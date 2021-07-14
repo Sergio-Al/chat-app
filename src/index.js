@@ -58,32 +58,46 @@ io.on("connection", (socket) => {
     // socket.broadcast.to.emit -  to emit broadcast behavior on a particular room connected.
     socket.join(user.room);
 
-    socket.emit("message", generateMessage("Welcome!"));
+    socket.emit(
+      "message",
+      generateMessage("Admin", `Welcome ${user.username}`)
+    );
 
     // emit an event to everyone except for this connection
     socket.broadcast
       .to(user.room)
-      .emit("message", generateMessage(`${user.username} has joined!`));
+      .emit("message", generateMessage('Admin', `${user.username} has joined!`));
 
     callback();
   });
 
   // Event listener 'sendMessage'
   socket.on("sendMessage", (msg, callback) => {
+    const user = getUser(socket.id);
+
     const filter = new Filter();
 
     if (filter.isProfane(msg)) {
       return callback("profanity is not allowed!");
     }
 
-    io.to("js").emit("message", generateMessage(msg));
-    callback("delivered!");
+    if (user) {
+      io.to(user.room).emit("message", generateMessage(user.username, msg));
+      callback("delivered!");
+    }
   });
 
   socket.on("location", (msg, callback) => {
-    const url = `https://google.com/maps?q=${msg.lat},${msg.long}`;
-    io.emit("locationMessage", generateLocationMessage(url));
-    callback("your location has been shared!");
+    const user = getUser(socket.id);
+
+    if (user) {
+      const url = `https://google.com/maps?q=${msg.lat},${msg.long}`;
+      io.to(user.room).emit(
+        "locationMessage",
+        generateLocationMessage(user.username, url)
+      );
+      callback("your location has been shared!");
+    }
   });
 
   socket.on("disconnect", () => {

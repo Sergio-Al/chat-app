@@ -68,6 +68,7 @@ socket.on("locationMessage", (message) => {
   console.log(message.url);
 
   const html = Mustache.render(userLocationTemplate, {
+    username: message.username,
     url: message.url,
     createdAt: moment(message.createdAt).format("h:mm a"),
   });
@@ -78,6 +79,7 @@ socket.on("message", (message) => {
   console.log("Message: ", message.text);
 
   const html = Mustache.render(messageTemplate, {
+    username: message.username,
     message: message.text,
     createdAt: moment(message.createdAt).format("h:mm a"),
   });
@@ -98,9 +100,13 @@ $locationButton.addEventListener("click", () => {
         lat: position.coords.latitude,
         long: position.coords.longitude,
       },
-      (message) => {
+      (error) => {
+        if (error) {
+          return console.log(error);
+        }
+
         $locationButton.removeAttribute("disabled");
-        console.log("Result", message);
+        console.log("Location Send");
       }
     );
   });
