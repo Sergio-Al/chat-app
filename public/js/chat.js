@@ -26,6 +26,7 @@ const messageTemplate = document.querySelector("#message-template").innerHTML;
 const userLocationTemplate = document.querySelector(
   "#user-location-template"
 ).innerHTML;
+const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML;
 
 // Options
 // ignoreQueryPrefix is for '?' at the beginning of our query as param in html send form
@@ -84,6 +85,14 @@ socket.on("message", (message) => {
     createdAt: moment(message.createdAt).format("h:mm a"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
+});
+
+socket.on("roomData", ({ room, users }) => {
+  const html = Mustache.render(sidebarTemplate, {
+    room,
+    users
+  });
+  document.querySelector('#sidebar').innerHTML = html;
 });
 
 $locationButton.addEventListener("click", () => {
